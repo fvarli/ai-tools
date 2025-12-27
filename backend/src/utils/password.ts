@@ -11,7 +11,6 @@ export async function hashPassword(password: string): Promise<string> {
     memoryCost: 65536, // 64 MB
     timeCost: 3,
     parallelism: 4,
-    saltLength: 16,
   });
 }
 

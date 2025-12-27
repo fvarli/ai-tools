@@ -68,7 +68,7 @@ async function main(): Promise<void> {
     const result = createUserSchema.safeParse({ username, email, password });
     if (!result.success) {
       console.error('\nValidation errors:');
-      result.error.errors.forEach((err) => {
+      result.error.issues.forEach((err) => {
         console.error(`  - ${err.path.join('.')}: ${err.message}`);
       });
       process.exit(1);

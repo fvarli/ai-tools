@@ -17,9 +17,9 @@ export interface DecodedToken extends TokenPayload {
  */
 export function generateAccessToken(payload: TokenPayload): string {
   return jwt.sign(payload, config.JWT_ACCESS_SECRET, {
-    expiresIn: config.JWT_ACCESS_EXPIRES_IN,
+    expiresIn: config.JWT_ACCESS_EXPIRES_IN as string,
     algorithm: 'HS256',
-  });
+  } as jwt.SignOptions);
 }
 
 /**
@@ -27,9 +27,9 @@ export function generateAccessToken(payload: TokenPayload): string {
  */
 export function generateRefreshToken(payload: TokenPayload): string {
   return jwt.sign(payload, config.JWT_REFRESH_SECRET, {
-    expiresIn: config.JWT_REFRESH_EXPIRES_IN,
+    expiresIn: config.JWT_REFRESH_EXPIRES_IN as string,
     algorithm: 'HS256',
-  });
+  } as jwt.SignOptions);
 }
 
 /**

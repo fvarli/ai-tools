@@ -17,7 +17,7 @@ export async function getSessions(
   next: NextFunction
 ): Promise<void> {
   try {
-    const { page, limit } = (req as any).validatedQuery || req.query as { page: number; limit: number };
+    const { page, limit } = (req as any).validatedQuery || req.query as unknown as { page: number; limit: number };
     const { sessions, total } = await chatService.getSessions(
       req.user!.userId,
       page,
@@ -142,7 +142,7 @@ export async function getMessages(
   next: NextFunction
 ): Promise<void> {
   try {
-    const { limit, before } = (req as any).validatedQuery || req.query as { limit: number; before?: string };
+    const { limit, before } = (req as any).validatedQuery || req.query as unknown as { limit: number; before?: string };
     const { messages, hasMore } = await chatService.getMessages(
       req.params.sessionId,
       req.user!.userId,

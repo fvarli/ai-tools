@@ -11,7 +11,7 @@ export function validateBody<T extends z.ZodTypeAny>(schema: T) {
       const result = schema.safeParse(req.body);
 
       if (!result.success) {
-        const errors = result.error.errors.map((err) => ({
+        const errors = result.error.issues.map((err: z.ZodIssue) => ({
           field: err.path.join('.'),
           message: err.message,
         }));
@@ -36,7 +36,7 @@ export function validateQuery<T extends z.ZodTypeAny>(schema: T) {
       const result = schema.safeParse(req.query);
 
       if (!result.success) {
-        const errors = result.error.errors.map((err) => ({
+        const errors = result.error.issues.map((err: z.ZodIssue) => ({
           field: err.path.join('.'),
           message: err.message,
         }));
@@ -62,7 +62,7 @@ export function validateParams<T extends z.ZodTypeAny>(schema: T) {
       const result = schema.safeParse(req.params);
 
       if (!result.success) {
-        const errors = result.error.errors.map((err) => ({
+        const errors = result.error.issues.map((err: z.ZodIssue) => ({
           field: err.path.join('.'),
           message: err.message,
         }));
@@ -70,7 +70,8 @@ export function validateParams<T extends z.ZodTypeAny>(schema: T) {
         throw new ValidationError('Validation failed', errors);
       }
 
-      req.params = result.data;
+      // Store validated params in a custom property
+      (req as any).validatedParams = result.data;
       next();
     } catch (error) {
       next(error);
