@@ -44,7 +44,8 @@ export function validateQuery<T extends z.ZodTypeAny>(schema: T) {
         throw new ValidationError('Validation failed', errors);
       }
 
-      req.query = result.data;
+      // Store validated query in a custom property (req.query is read-only in newer Express)
+      (req as any).validatedQuery = result.data;
       next();
     } catch (error) {
       next(error);

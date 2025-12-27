@@ -18,7 +18,7 @@ export function SessionItem({
 }: SessionItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(session.title);
-  const [showMenu, setShowMenu] = useState(false);
+  const [, setShowMenu] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {

@@ -57,7 +57,7 @@ export async function getMessages(
 
 export function createMessageStream(
   sessionId: string,
-  input: SendMessageInput
+  _input: SendMessageInput
 ): {
   eventSource: EventSource;
   controller: AbortController;
