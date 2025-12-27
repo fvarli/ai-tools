@@ -9,8 +9,6 @@ services:
       POSTGRES_DB: ai_tools
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -30,9 +28,9 @@ services:
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
-      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost}
+      CORS_ORIGIN: ${CORS_ORIGIN:-https://devtools.ferzendervarli.com}
     ports:
-      - "3001:3001"
+      - "127.0.0.1:3001:3001"
     depends_on:
       postgres:
         condition: service_healthy
@@ -51,7 +49,7 @@ services:
     container_name: ai-tools-frontend
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "127.0.0.1:8080:80"
     depends_on:
       - backend
     healthcheck:
