@@ -24,7 +24,7 @@ interface ChatContextType {
   selectSession: (sessionId: string) => Promise<void>;
   deleteSession: (sessionId: string) => Promise<void>;
   renameSession: (sessionId: string, title: string) => Promise<void>;
-  sendMessage: (content: string, model?: string) => Promise<void>;
+  sendMessage: (content: string, model?: string, sessionId?: string) => Promise<void>;
   clearCurrentSession: () => void;
   toggleSidebar: () => void;
   closeSidebar: () => void;
@@ -145,8 +145,9 @@ export function ChatProvider({ children, initialSessionId }: ChatProviderProps) 
   );
 
   const sendMessage = useCallback(
-    async (content: string, model: string = 'gpt-4o-mini') => {
-      if (!currentSession) return;
+    async (content: string, model: string = 'gpt-4o-mini', overrideSessionId?: string) => {
+      const targetSessionId = overrideSessionId || currentSession?.id;
+      if (!targetSessionId) return;
 
       setIsSending(true);
       setStreamingContent('');
@@ -174,7 +175,7 @@ export function ChatProvider({ children, initialSessionId }: ChatProviderProps) 
         let fullContent = '';
 
         await chatApi.sendMessageStream(
-          currentSession.id,
+          targetSessionId,
           { content, model },
           {
             onStart: (data) => {

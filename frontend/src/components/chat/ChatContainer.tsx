@@ -14,10 +14,12 @@ export function ChatContainer() {
 
   const handleSendMessage = async (content: string) => {
     if (!currentSession) {
-      // Create a new session first
-      await createSession();
+      // Create a new session and send message immediately with session ID
+      const session = await createSession();
+      await sendMessage(content, 'gpt-4o-mini', session.id);
+    } else {
+      await sendMessage(content);
     }
-    await sendMessage(content);
   };
 
   return (
