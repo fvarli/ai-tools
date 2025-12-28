@@ -53,7 +53,7 @@ export function Sidebar() {
       {/* Header */}
       <div className="p-4 border-b border-gray-700">
         <div className="flex items-center justify-between mb-3 md:hidden">
-          <span className="text-lg font-semibold">AI Tools</span>
+          <span className="text-lg font-semibold">Dev Tools</span>
           <button
             onClick={closeSidebar}
             className="p-2 rounded-lg hover:bg-gray-700 transition-colors"

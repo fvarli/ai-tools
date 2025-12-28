@@ -1,10 +1,10 @@
-# AI Tools
+# Dev Tools
 
 A production-ready, full-stack web application for authenticated AI chat with secure backend proxying. Built with modern technologies and best practices for security, scalability, and developer experience.
 
 ## Overview
 
-AI Tools provides a ChatGPT-like interface where authenticated users can interact with AI models through a secure backend proxy. All AI requests are routed through the server, ensuring API keys remain protected and usage can be monitored and controlled.
+Dev Tools provides a ChatGPT-like interface where authenticated users can interact with AI models through a secure backend proxy. All AI requests are routed through the server, ensuring API keys remain protected and usage can be monitored and controlled.
 
 **Key Features:**
 - Secure authentication with JWT tokens in HTTP-only cookies
@@ -378,7 +378,7 @@ docker compose exec postgres psql -U postgres ai_tools
 ## Project Structure
 
 ```
-ai-tools/
+dev-tools/
 ├── frontend/
 │   ├── src/
 │   │   ├── components/

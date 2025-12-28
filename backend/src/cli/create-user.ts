@@ -49,7 +49,7 @@ function promptPassword(question: string): Promise<string> {
 }
 
 async function main(): Promise<void> {
-  console.log('\n=== AI Tools - Create User ===\n');
+  console.log('\n=== Dev Tools - Create User ===\n');
 
   try {
     // Get user input

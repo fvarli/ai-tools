@@ -43,7 +43,7 @@ function ChatLayout() {
             </svg>
           </button>
           <h1 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
-            {currentSession?.title || 'AI Tools'}
+            {currentSession?.title || 'Dev Tools'}
           </h1>
         </div>
 

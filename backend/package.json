@@ -1,5 +1,5 @@
 {
-  "name": "ai-tools-backend",
+  "name": "dev-tools-backend",
   "version": "1.0.0",
   "type": "module",
   "main": "dist/server.js",
@@ -17,7 +17,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "AI Tools Backend - Authenticated Chat Application",
+  "description": "Dev Tools Backend - Authenticated Chat Application",
   "dependencies": {
     "@prisma/client": "^6.19.1",
     "argon2": "^0.44.0",

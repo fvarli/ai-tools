@@ -27,7 +27,7 @@ export function LoginForm() {
       <div className="max-w-md w-full space-y-6 md:space-y-8">
         <div>
           <h1 className="text-center text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white">
-            AI Tools
+            Dev Tools
           </h1>
           <h2 className="mt-2 text-center text-lg md:text-xl text-gray-600 dark:text-gray-400">
             Sign in to your account
