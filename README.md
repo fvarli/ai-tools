@@ -158,7 +158,7 @@ RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX_REQUESTS=100
 ```
 
-### Production Deployment (Docker)
+### Production Deployment (Docker - Local)
 
 ```bash
 # 1. Configure environment
@@ -172,10 +172,180 @@ docker-compose up -d
 docker-compose exec backend npx prisma migrate deploy
 
 # 4. Create admin user
-docker-compose exec backend npm run user:create
+docker-compose exec backend node dist/cli/create-user.js
 
 # 5. Access at http://localhost/ai-tools (or your domain)
 ```
+
+### Production Deployment (VPS/Cloud Server)
+
+This guide covers deploying to a VPS like DigitalOcean, Linode, or any Ubuntu server.
+
+#### Prerequisites
+- Ubuntu 22.04+ server with at least 1GB RAM
+- Domain name pointing to your server IP
+- SSH access to the server
+
+#### Step 1: Initial Server Setup
+
+```bash
+# SSH into your server
+ssh root@your-server-ip
+
+# Update system
+apt update && apt upgrade -y
+
+# Create swap (recommended for 1GB RAM servers)
+fallocate -l 2G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo '/swapfile none swap sw 0 0' >> /etc/fstab
+```
+
+#### Step 2: Install Docker & Docker Compose
+
+```bash
+# Install Docker
+curl -fsSL https://get.docker.com | sh
+
+# Install Docker Compose plugin
+apt install docker-compose-plugin -y
+
+# Verify installation
+docker --version
+docker compose version
+```
+
+#### Step 3: Install Nginx & Certbot
+
+```bash
+apt install nginx certbot python3-certbot-nginx -y
+```
+
+#### Step 4: Clone and Configure Project
+
+```bash
+cd /opt
+git clone https://github.com/fvarli/ai-tools.git
+cd ai-tools
+
+# Generate JWT secrets
+JWT_ACCESS=$(openssl rand -hex 64)
+JWT_REFRESH=$(openssl rand -hex 64)
+
+# Create root .env file for Docker Compose
+cat > .env << EOF
+JWT_ACCESS_SECRET=$JWT_ACCESS
+JWT_REFRESH_SECRET=$JWT_REFRESH
+OPENAI_API_KEY=sk-your-openai-api-key-here
+EOF
+
+# Edit with your actual OpenAI API key
+nano .env
+```
+
+#### Step 5: Configure Nginx Reverse Proxy
+
+Create Nginx configuration:
+
+```bash
+cat > /etc/nginx/sites-available/your-domain.com << 'EOF'
+server {
+    listen 80;
+    server_name your-domain.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    location /ai-tools/api/ {
+        rewrite ^/ai-tools/api(.*)$ /api$1 break;
+        proxy_pass http://127.0.0.1:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_buffering off;  # Required for SSE streaming
+    }
+}
+EOF
+
+# Enable site and remove default
+ln -s /etc/nginx/sites-available/your-domain.com /etc/nginx/sites-enabled/
+rm -f /etc/nginx/sites-enabled/default
+
+# Test and reload
+nginx -t && systemctl reload nginx
+```
+
+#### Step 6: Obtain SSL Certificate
+
+```bash
+certbot --nginx -d your-domain.com
+```
+
+#### Step 7: Start Application
+
+```bash
+cd /opt/ai-tools
+
+# Build and start all containers
+docker compose up -d --build
+
+# Wait for services to be ready, then run migrations
+docker compose exec backend npx prisma migrate deploy
+
+# Create admin user
+docker compose exec -it backend node dist/cli/create-user.js
+```
+
+#### Step 8: Configure Firewall
+
+```bash
+ufw allow OpenSSH
+ufw allow 'Nginx Full'
+ufw enable
+ufw status
+```
+
+#### Useful Commands
+
+```bash
+# View logs
+docker compose logs -f              # All services
+docker compose logs -f backend      # Backend only
+
+# Restart services
+docker compose restart
+
+# Rebuild after code changes
+cd /opt/ai-tools
+git pull
+docker compose up -d --build
+
+# Database backup
+docker compose exec postgres pg_dump -U postgres ai_tools > backup.sql
+
+# Enter database shell
+docker compose exec postgres psql -U postgres ai_tools
+```
+
+#### Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| 502 Bad Gateway | Check if containers are running: `docker compose ps` |
+| 404 on API | Verify Nginx rewrite rule for `/ai-tools/api/` |
+| 500 Internal Error | Check backend logs: `docker compose logs backend` |
+| Database errors | Run migrations: `docker compose exec backend npx prisma migrate deploy` |
+| SSL not working | Re-run certbot: `certbot --nginx -d your-domain.com` |
 
 ## API Endpoints
 
