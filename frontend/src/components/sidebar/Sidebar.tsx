@@ -15,6 +15,8 @@ export function Sidebar() {
     selectSession,
     deleteSession,
     renameSession,
+    isSidebarOpen,
+    closeSidebar,
   } = useChat();
 
   const [isCreating, setIsCreating] = useState(false);
@@ -27,15 +29,51 @@ export function Sidebar() {
     setIsCreating(true);
     try {
       await createSession();
+      closeSidebar();
     } finally {
       setIsCreating(false);
     }
   };
 
+  const handleSelectSession = (sessionId: string) => {
+    selectSession(sessionId);
+    closeSidebar();
+  };
+
   return (
-    <div className="flex flex-col h-full bg-gray-900 text-white w-64">
+    <div
+      className={`
+        fixed inset-y-0 left-0 z-40 w-64 bg-gray-900 text-white
+        transform transition-transform duration-300 ease-in-out
+        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        md:relative md:translate-x-0
+        flex flex-col h-full
+      `}
+    >
       {/* Header */}
       <div className="p-4 border-b border-gray-700">
+        <div className="flex items-center justify-between mb-3 md:hidden">
+          <span className="text-lg font-semibold">AI Tools</span>
+          <button
+            onClick={closeSidebar}
+            className="p-2 rounded-lg hover:bg-gray-700 transition-colors"
+            aria-label="Close sidebar"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
         <button
           onClick={handleNewChat}
           disabled={isCreating}
@@ -80,7 +118,7 @@ export function Sidebar() {
                 key={session.id}
                 session={session}
                 isActive={currentSession?.id === session.id}
-                onSelect={() => selectSession(session.id)}
+                onSelect={() => handleSelectSession(session.id)}
                 onDelete={() => deleteSession(session.id)}
                 onRename={(title) => renameSession(session.id, title)}
               />

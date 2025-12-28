@@ -43,9 +43,9 @@ export function MessageInput({
   };
 
   return (
-    <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
+    <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-3 md:p-4">
       <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
-        <div className="flex gap-4 items-end">
+        <div className="flex gap-2 md:gap-4 items-end">
           <div className="flex-1 relative">
             <textarea
               ref={textareaRef}
@@ -56,14 +56,14 @@ export function MessageInput({
               placeholder={placeholder}
               disabled={disabled}
               rows={1}
-              className="w-full resize-none rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full resize-none rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 md:px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ minHeight: '44px', maxHeight: '200px' }}
             />
           </div>
           <button
             type="submit"
             disabled={disabled || !content.trim()}
-            className="flex-shrink-0 btn-primary h-11 w-11 p-0 flex items-center justify-center disabled:opacity-50"
+            className="flex-shrink-0 btn-primary h-12 w-12 md:h-11 md:w-11 p-0 flex items-center justify-center disabled:opacity-50 rounded-full md:rounded-lg"
           >
             {disabled ? (
               <svg
@@ -103,7 +103,7 @@ export function MessageInput({
             )}
           </button>
         </div>
-        <p className="text-xs text-gray-400 mt-2 text-center">
+        <p className="text-xs text-gray-400 mt-2 text-center hidden md:block">
           Press Enter to send, Shift+Enter for new line
         </p>
       </form>

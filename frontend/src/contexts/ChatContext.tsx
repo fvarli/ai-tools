@@ -16,6 +16,7 @@ interface ChatContextType {
   isLoadingMessages: boolean;
   isSending: boolean;
   streamingContent: string;
+  isSidebarOpen: boolean;
   loadSessions: () => Promise<void>;
   createSession: (title?: string) => Promise<ChatSession>;
   selectSession: (sessionId: string) => Promise<void>;
@@ -23,6 +24,8 @@ interface ChatContextType {
   renameSession: (sessionId: string, title: string) => Promise<void>;
   sendMessage: (content: string, model?: string) => Promise<void>;
   clearCurrentSession: () => void;
+  toggleSidebar: () => void;
+  closeSidebar: () => void;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -39,6 +42,15 @@ export function ChatProvider({ children }: ChatProviderProps) {
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [streamingContent, setStreamingContent] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = useCallback(() => {
+    setIsSidebarOpen((prev) => !prev);
+  }, []);
+
+  const closeSidebar = useCallback(() => {
+    setIsSidebarOpen(false);
+  }, []);
 
   const loadSessions = useCallback(async () => {
     setIsLoadingSessions(true);
@@ -216,6 +228,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
     isLoadingMessages,
     isSending,
     streamingContent,
+    isSidebarOpen,
     loadSessions,
     createSession,
     selectSession,
@@ -223,6 +236,8 @@ export function ChatProvider({ children }: ChatProviderProps) {
     renameSession,
     sendMessage,
     clearCurrentSession,
+    toggleSidebar,
+    closeSidebar,
   };
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;

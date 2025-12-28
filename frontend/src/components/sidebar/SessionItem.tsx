@@ -54,13 +54,13 @@ export function SessionItem({
 
   return (
     <div
-      className={`group relative flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
+      className={`group relative flex items-center gap-2 px-3 py-3 md:py-2 rounded-lg cursor-pointer transition-colors ${
         isActive ? 'bg-gray-700' : 'hover:bg-gray-800'
       }`}
       onClick={() => !isEditing && onSelect()}
     >
       <svg
-        className="w-4 h-4 flex-shrink-0 text-gray-400"
+        className="w-5 h-5 md:w-4 md:h-4 flex-shrink-0 text-gray-400"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -85,22 +85,26 @@ export function SessionItem({
           onClick={(e) => e.stopPropagation()}
         />
       ) : (
-        <span className="flex-1 text-sm truncate">{session.title}</span>
+        <span className="flex-1 text-sm truncate pr-16">{session.title}</span>
       )}
 
       {!isEditing && (
-        <div className="absolute right-2 hidden group-hover:flex items-center gap-1">
+        <div
+          className={`absolute right-2 items-center gap-1 ${
+            isActive ? 'flex' : 'hidden group-hover:flex'
+          }`}
+        >
           <button
             onClick={(e) => {
               e.stopPropagation();
               setEditTitle(session.title);
               setIsEditing(true);
             }}
-            className="p-1 rounded hover:bg-gray-600"
+            className="p-2 md:p-1 rounded hover:bg-gray-600"
             title="Rename"
           >
             <svg
-              className="w-4 h-4"
+              className="w-5 h-5 md:w-4 md:h-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -118,11 +122,11 @@ export function SessionItem({
               e.stopPropagation();
               handleDelete();
             }}
-            className="p-1 rounded hover:bg-gray-600 text-red-400"
+            className="p-2 md:p-1 rounded hover:bg-gray-600 text-red-400"
             title="Delete"
           >
             <svg
-              className="w-4 h-4"
+              className="w-5 h-5 md:w-4 md:h-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

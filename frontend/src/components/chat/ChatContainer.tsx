@@ -22,8 +22,8 @@ export function ChatContainer() {
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-gray-900">
-      {/* Header */}
-      <div className="border-b border-gray-200 dark:border-gray-700 px-4 py-3">
+      {/* Header - hidden on mobile (shown in ChatPage mobile header) */}
+      <div className="hidden md:block border-b border-gray-200 dark:border-gray-700 px-4 py-3">
         <h1 className="text-lg font-medium text-gray-900 dark:text-white truncate">
           {currentSession?.title || 'New Chat'}
         </h1>
