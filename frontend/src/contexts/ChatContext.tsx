@@ -72,7 +72,7 @@ export function ChatProvider({ children, initialSessionId }: ChatProviderProps) 
         })
         .catch(() => {
           // Session not found, redirect to base
-          navigate('/ai-tools', { replace: true });
+          navigate('/', { replace: true });
         })
         .finally(() => {
           setIsLoadingMessages(false);
@@ -97,7 +97,7 @@ export function ChatProvider({ children, initialSessionId }: ChatProviderProps) 
     setSessions((prev) => [session, ...prev]);
     setCurrentSession(session);
     setMessages([]);
-    navigate(`/ai-tools/chat/${session.id}`);
+    navigate(`/chat/${session.id}`);
     return session;
   }, [navigate]);
 
@@ -110,7 +110,7 @@ export function ChatProvider({ children, initialSessionId }: ChatProviderProps) 
       ]);
       setCurrentSession(session);
       setMessages(messagesResponse.messages);
-      navigate(`/ai-tools/chat/${sessionId}`);
+      navigate(`/chat/${sessionId}`);
     } finally {
       setIsLoadingMessages(false);
     }
@@ -124,7 +124,7 @@ export function ChatProvider({ children, initialSessionId }: ChatProviderProps) 
       if (currentSession?.id === sessionId) {
         setCurrentSession(null);
         setMessages([]);
-        navigate('/ai-tools');
+        navigate('/');
       }
     },
     [currentSession, navigate]
@@ -251,7 +251,7 @@ export function ChatProvider({ children, initialSessionId }: ChatProviderProps) 
     setCurrentSession(null);
     setMessages([]);
     setStreamingContent('');
-    navigate('/ai-tools');
+    navigate('/');
   }, [navigate]);
 
   const value: ChatContextType = {

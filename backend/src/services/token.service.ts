@@ -95,7 +95,7 @@ export const accessTokenCookieOptions = {
   httpOnly: true,
   secure: config.NODE_ENV === 'production',
   sameSite: 'strict' as const,
-  path: '/ai-tools',
+  path: '/',
   maxAge: getTokenExpirationMs(config.JWT_ACCESS_EXPIRES_IN),
 };
 
@@ -106,6 +106,6 @@ export const refreshTokenCookieOptions = {
   httpOnly: true,
   secure: config.NODE_ENV === 'production',
   sameSite: 'strict' as const,
-  path: '/ai-tools/api/auth',
+  path: '/api/auth',
   maxAge: getTokenExpirationMs(config.JWT_REFRESH_EXPIRES_IN),
 };

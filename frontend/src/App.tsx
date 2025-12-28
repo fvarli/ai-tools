@@ -11,9 +11,9 @@ function App() {
       <AuthProvider>
         <div className="dark">
           <Routes>
-            <Route path="/ai-tools/login" element={<LoginPage />} />
+            <Route path="/login" element={<LoginPage />} />
             <Route
-              path="/ai-tools"
+              path="/"
               element={
                 <ProtectedRoute>
                   <ChatPage />
@@ -21,15 +21,14 @@ function App() {
               }
             />
             <Route
-              path="/ai-tools/chat/:sessionId"
+              path="/chat/:sessionId"
               element={
                 <ProtectedRoute>
                   <ChatPage />
                 </ProtectedRoute>
               }
             />
-            <Route path="/" element={<Navigate to="/ai-tools" replace />} />
-            <Route path="*" element={<Navigate to="/ai-tools" replace />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
       </AuthProvider>

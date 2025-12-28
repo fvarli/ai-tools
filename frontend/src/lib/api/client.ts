@@ -1,6 +1,6 @@
 import type { ApiResponse } from '../types/api';
 
-const API_BASE_URL = '/ai-tools/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 class ApiError extends Error {
   public code: string;

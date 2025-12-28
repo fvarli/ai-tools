@@ -68,7 +68,7 @@ AI Tools provides a ChatGPT-like interface where authenticated users can interac
          │                               │
          ▼                               ▼
 ┌───────────────────┐       ┌────────────────────────┐
-│ /ai-tools         │       │ /ai-tools/api          │
+│ /                 │       │ /api                   │
 │ React SPA         │       │ Express.js Backend     │
 │ (Static Files)    │       │ (Port 3001)            │
 └───────────────────┘       └────────────┬───────────┘
@@ -122,7 +122,7 @@ cd frontend
 npm install
 npm run dev
 
-# 5. Open http://localhost:5173/ai-tools
+# 5. Open http://localhost:5173
 ```
 
 ### Environment Variables
@@ -174,7 +174,7 @@ docker-compose exec backend npx prisma migrate deploy
 # 4. Create admin user
 docker-compose exec backend node dist/cli/create-user.js
 
-# 5. Access at http://localhost/ai-tools (or your domain)
+# 5. Access at http://localhost (or your domain)
 ```
 
 ### Production Deployment (VPS/Cloud Server)
@@ -264,8 +264,7 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 
-    location /ai-tools/api/ {
-        rewrite ^/ai-tools/api(.*)$ /api$1 break;
+    location /api/ {
         proxy_pass http://127.0.0.1:3001;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
@@ -342,7 +341,7 @@ docker compose exec postgres psql -U postgres ai_tools
 | Issue | Solution |
 |-------|----------|
 | 502 Bad Gateway | Check if containers are running: `docker compose ps` |
-| 404 on API | Verify Nginx rewrite rule for `/ai-tools/api/` |
+| 404 on API | Verify Nginx location for `/api/` and backend is running |
 | 500 Internal Error | Check backend logs: `docker compose logs backend` |
 | Database errors | Run migrations: `docker compose exec backend npx prisma migrate deploy` |
 | SSL not working | Re-run certbot: `certbot --nginx -d your-domain.com` |

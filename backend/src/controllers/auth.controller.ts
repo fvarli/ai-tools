@@ -53,8 +53,8 @@ export async function logout(
     }
 
     // Clear cookies
-    res.clearCookie('accessToken', { path: '/ai-tools' });
-    res.clearCookie('refreshToken', { path: '/ai-tools/api/auth' });
+    res.clearCookie('accessToken', { path: '/' });
+    res.clearCookie('refreshToken', { path: '/api/auth' });
 
     res.json({
       success: true,

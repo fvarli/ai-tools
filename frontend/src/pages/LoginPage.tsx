@@ -15,7 +15,7 @@ export function LoginPage() {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/ai-tools" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return <LoginForm />;
