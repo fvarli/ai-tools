@@ -206,12 +206,11 @@ export async function streamMessage(
       })}\n\n`
     );
 
-    let fullContent = '';
     let tokenIndex = 0;
 
     try {
       // Stream the response
-      fullContent = await streamChatCompletion(messages, model, {
+      await streamChatCompletion(messages, model, {
         onToken: (token) => {
           res.write(
             `event: delta\ndata: ${JSON.stringify({
@@ -220,7 +219,7 @@ export async function streamMessage(
             })}\n\n`
           );
         },
-        onDone: async (usage) => {
+        onDone: async (fullContent, usage) => {
           // Save assistant message
           const assistantMessage = await chatService.saveAssistantMessage(
             sessionId,

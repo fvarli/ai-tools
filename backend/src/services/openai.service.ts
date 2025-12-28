@@ -14,7 +14,7 @@ export interface ChatMessage {
 export interface StreamCallbacks {
   onStart?: () => void;
   onToken?: (token: string) => void;
-  onDone?: (usage: { promptTokens: number; completionTokens: number }) => void;
+  onDone?: (fullContent: string, usage: { promptTokens: number; completionTokens: number }) => void;
   onError?: (error: Error) => void;
 }
 
@@ -55,7 +55,7 @@ export async function streamChatCompletion(
       }
     }
 
-    callbacks.onDone?.(usage);
+    callbacks.onDone?.(fullContent, usage);
     return fullContent;
   } catch (error) {
     logger.error('OpenAI streaming error:', error);
