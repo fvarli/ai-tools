@@ -1,3 +1,4 @@
+import { useParams } from 'react-router-dom';
 import { Sidebar } from '../components/sidebar/Sidebar';
 import { ChatContainer } from '../components/chat/ChatContainer';
 import { ChatProvider, useChat } from '../contexts/ChatContext';
@@ -56,8 +57,10 @@ function ChatLayout() {
 }
 
 export function ChatPage() {
+  const { sessionId } = useParams<{ sessionId: string }>();
+
   return (
-    <ChatProvider>
+    <ChatProvider initialSessionId={sessionId}>
       <ChatLayout />
     </ChatProvider>
   );

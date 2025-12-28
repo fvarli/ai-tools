@@ -20,6 +20,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/ai-tools/chat/:sessionId"
+              element={
+                <ProtectedRoute>
+                  <ChatPage />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/" element={<Navigate to="/ai-tools" replace />} />
             <Route path="*" element={<Navigate to="/ai-tools" replace />} />
           </Routes>

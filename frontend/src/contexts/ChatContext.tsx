@@ -3,8 +3,10 @@ import {
   useContext,
   useState,
   useCallback,
+  useEffect,
   type ReactNode,
 } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { ChatSession, Message } from '../lib/types/chat';
 import * as chatApi from '../lib/api/chat';
 
@@ -32,9 +34,11 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 interface ChatProviderProps {
   children: ReactNode;
+  initialSessionId?: string;
 }
 
-export function ChatProvider({ children }: ChatProviderProps) {
+export function ChatProvider({ children, initialSessionId }: ChatProviderProps) {
+  const navigate = useNavigate();
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [currentSession, setCurrentSession] = useState<ChatSession | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -43,6 +47,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
   const [isSending, setIsSending] = useState(false);
   const [streamingContent, setStreamingContent] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
 
   const toggleSidebar = useCallback(() => {
     setIsSidebarOpen((prev) => !prev);
@@ -51,6 +56,31 @@ export function ChatProvider({ children }: ChatProviderProps) {
   const closeSidebar = useCallback(() => {
     setIsSidebarOpen(false);
   }, []);
+
+  // Load initial session from URL
+  useEffect(() => {
+    if (initialSessionId && !initialLoadDone) {
+      setInitialLoadDone(true);
+      setIsLoadingMessages(true);
+      Promise.all([
+        chatApi.getSession(initialSessionId),
+        chatApi.getMessages(initialSessionId),
+      ])
+        .then(([session, messagesResponse]) => {
+          setCurrentSession(session);
+          setMessages(messagesResponse.messages);
+        })
+        .catch(() => {
+          // Session not found, redirect to base
+          navigate('/ai-tools', { replace: true });
+        })
+        .finally(() => {
+          setIsLoadingMessages(false);
+        });
+    } else if (!initialSessionId) {
+      setInitialLoadDone(true);
+    }
+  }, [initialSessionId, initialLoadDone, navigate]);
 
   const loadSessions = useCallback(async () => {
     setIsLoadingSessions(true);
@@ -67,8 +97,9 @@ export function ChatProvider({ children }: ChatProviderProps) {
     setSessions((prev) => [session, ...prev]);
     setCurrentSession(session);
     setMessages([]);
+    navigate(`/ai-tools/chat/${session.id}`);
     return session;
-  }, []);
+  }, [navigate]);
 
   const selectSession = useCallback(async (sessionId: string) => {
     setIsLoadingMessages(true);
@@ -79,10 +110,11 @@ export function ChatProvider({ children }: ChatProviderProps) {
       ]);
       setCurrentSession(session);
       setMessages(messagesResponse.messages);
+      navigate(`/ai-tools/chat/${sessionId}`);
     } finally {
       setIsLoadingMessages(false);
     }
-  }, []);
+  }, [navigate]);
 
   const deleteSession = useCallback(
     async (sessionId: string) => {
@@ -92,9 +124,10 @@ export function ChatProvider({ children }: ChatProviderProps) {
       if (currentSession?.id === sessionId) {
         setCurrentSession(null);
         setMessages([]);
+        navigate('/ai-tools');
       }
     },
-    [currentSession]
+    [currentSession, navigate]
   );
 
   const renameSession = useCallback(
@@ -218,7 +251,8 @@ export function ChatProvider({ children }: ChatProviderProps) {
     setCurrentSession(null);
     setMessages([]);
     setStreamingContent('');
-  }, []);
+    navigate('/ai-tools');
+  }, [navigate]);
 
   const value: ChatContextType = {
     sessions,
