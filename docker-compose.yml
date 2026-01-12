@@ -26,7 +26,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3001
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/ai_tools?schema=public&connection_limit=5
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/ai_tools?schema=public&connection_limit=5"
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
