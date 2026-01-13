@@ -3,8 +3,8 @@ import { hashPassword } from '../utils/password.js';
 import { UserRole } from '@prisma/client';
 
 const DM_USERS = [
-  { username: 'cheesecake', email: 'cheesecake@example.com', password: 'Cheesecake123!' },
-  { username: 'sansebastian', email: 'sansebastian@example.com', password: 'Sansebastian123!' },
+  { username: 'cheesecake', email: 'cheesecake@ferzendervarli.com', password: 'Cheesecake123!' },
+  { username: 'sansebastian', email: 'sansebastian@ferzendervarli.com', password: 'Sansebastian123!' },
 ];
 
 async function main(): Promise<void> {
