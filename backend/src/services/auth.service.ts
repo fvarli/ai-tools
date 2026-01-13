@@ -14,6 +14,7 @@ export interface AuthUser {
   id: string;
   username: string;
   email: string;
+  role: string;
   createdAt: Date;
 }
 
@@ -52,6 +53,7 @@ export async function createUser(input: CreateUserInput): Promise<AuthUser> {
       id: true,
       username: true,
       email: true,
+      role: true,
       createdAt: true,
     },
   });
@@ -112,6 +114,7 @@ export async function login(input: LoginInput): Promise<LoginResult> {
       id: user.id,
       username: user.username,
       email: user.email,
+      role: user.role,
       createdAt: user.createdAt,
     },
     accessToken,
@@ -203,6 +206,7 @@ export async function getUserById(userId: string): Promise<AuthUser> {
       id: true,
       username: true,
       email: true,
+      role: true,
       createdAt: true,
     },
   });

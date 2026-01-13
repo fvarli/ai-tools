@@ -2,6 +2,7 @@ import readline from 'readline';
 import { prisma } from '../config/database.js';
 import { hashPassword } from '../utils/password.js';
 import { createUserSchema } from '../schemas/auth.schema.js';
+import { UserRole } from '@prisma/client';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -64,6 +65,13 @@ async function main(): Promise<void> {
       process.exit(1);
     }
 
+    // Ask for role
+    console.log('\nAvailable roles:');
+    console.log('  1. USER (default - AI chat user)');
+    console.log('  2. DM_USER (Direct message user)');
+    const roleChoice = await prompt('Select role (1 or 2, default: 1): ');
+    const role: UserRole = roleChoice === '2' ? UserRole.DM_USER : UserRole.USER;
+
     // Validate input
     const result = createUserSchema.safeParse({ username, email, password });
     if (!result.success) {
@@ -94,11 +102,13 @@ async function main(): Promise<void> {
         username,
         email,
         passwordHash,
+        role,
       },
       select: {
         id: true,
         username: true,
         email: true,
+        role: true,
         createdAt: true,
       },
     });
@@ -107,6 +117,7 @@ async function main(): Promise<void> {
     console.log('  ID:', user.id);
     console.log('  Username:', user.username);
     console.log('  Email:', user.email);
+    console.log('  Role:', user.role);
     console.log('  Created:', user.createdAt.toISOString());
     console.log();
   } catch (error) {

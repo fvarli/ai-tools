@@ -1,9 +1,21 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { LoginPage } from './pages/LoginPage';
 import { ChatPage } from './pages/ChatPage';
+import { DirectMessagesPage } from './pages/DirectMessagesPage';
 import './index.css';
+
+// Component to handle role-based home redirect
+function RoleBasedHome() {
+  const { user } = useAuth();
+
+  if (user?.role === 'DM_USER') {
+    return <DirectMessagesPage />;
+  }
+
+  return <ChatPage />;
+}
 
 function App() {
   return (
@@ -16,7 +28,7 @@ function App() {
               path="/"
               element={
                 <ProtectedRoute>
-                  <ChatPage />
+                  <RoleBasedHome />
                 </ProtectedRoute>
               }
             />
@@ -25,6 +37,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ChatPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dm"
+              element={
+                <ProtectedRoute>
+                  <DirectMessagesPage />
                 </ProtectedRoute>
               }
             />

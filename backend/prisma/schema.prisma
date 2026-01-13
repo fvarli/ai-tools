@@ -7,18 +7,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  USER
+  DM_USER
+}
+
 model User {
   id           String        @id @default(uuid())
   username     String        @unique @db.VarChar(50)
   email        String        @unique @db.VarChar(255)
   passwordHash String        @map("password_hash") @db.VarChar(255)
+  role         UserRole      @default(USER)
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @updatedAt @map("updated_at")
   lastLoginAt  DateTime?     @map("last_login_at")
   isActive     Boolean       @default(true) @map("is_active")
 
-  chatSessions  ChatSession[]
-  refreshTokens RefreshToken[]
+  chatSessions   ChatSession[]
+  refreshTokens  RefreshToken[]
+  directMessages DirectMessage[]
 
   @@index([email])
   @@index([username])
@@ -73,4 +80,16 @@ model RefreshToken {
   @@index([tokenHash])
   @@index([expiresAt])
   @@map("refresh_tokens")
+}
+
+model DirectMessage {
+  id        String   @id @default(uuid())
+  senderId  String   @map("sender_id")
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  sender User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt(sort: Desc)])
+  @@map("direct_messages")
 }

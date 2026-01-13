@@ -1,6 +1,8 @@
+import { createServer } from 'http';
 import { app } from './app.js';
 import { config } from './config/index.js';
 import { connectDatabase, disconnectDatabase } from './config/database.js';
+import { setupSocketServer } from './config/socket.js';
 import { logger } from './utils/logger.js';
 
 const startServer = async (): Promise<void> => {
@@ -8,8 +10,15 @@ const startServer = async (): Promise<void> => {
     // Connect to database
     await connectDatabase();
 
+    // Create HTTP server
+    const httpServer = createServer(app);
+
+    // Setup Socket.io
+    setupSocketServer(httpServer);
+    logger.info('Socket.io server initialized');
+
     // Start server
-    const server = app.listen(config.PORT, config.HOST, () => {
+    const server = httpServer.listen(config.PORT, config.HOST, () => {
       logger.info(
         `Server running on http://${config.HOST}:${config.PORT} in ${config.NODE_ENV} mode`
       );
